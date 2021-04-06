@@ -4,9 +4,7 @@ import jsonServerProvider from 'ra-data-json-server';
 import UserList from './users';
 
 function App() {
-  const dataProvider = jsonServerProvider(
-    'https://jsonplaceholder.typicode.com',
-  );
+  const dataProvider = jsonServerProvider('https://localhost:3000/api');
 
   return (
     <Admin dataProvider={dataProvider}>
