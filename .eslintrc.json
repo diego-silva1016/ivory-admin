@@ -47,7 +47,9 @@
       "error"
     ],
     "react/react-in-jsx-scope": "off",
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "react/jsx-props-no-spreading": 0
   },
   "settings": {
     "import/resolver": {
