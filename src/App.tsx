@@ -7,12 +7,13 @@ import UserEdit from './pages/users/UserEdit';
 
 import './styles/global.scss';
 import Login from './pages/login';
+import Dashboard from './pages/dashboard';
 
 function App() {
   const dataProvider = jsonServerProvider('https://localhost:3000/api');
 
   return (
-    <Admin loginPage={Login} dataProvider={dataProvider}>
+    <Admin loginPage={Login} dataProvider={dataProvider} dashboard={Dashboard}>
       <Resource
         name="users"
         list={UserList}
