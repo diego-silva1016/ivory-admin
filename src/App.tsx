@@ -5,11 +5,14 @@ import UserList from './users/UserList';
 import UserCreate from './users/UserCreate';
 import UserEdit from './users/UserEdit';
 
+import './styles/global.scss';
+import Login from './login';
+
 function App() {
   const dataProvider = jsonServerProvider('https://localhost:3000/api');
 
   return (
-    <Admin dataProvider={dataProvider}>
+    <Admin loginPage={Login} dataProvider={dataProvider}>
       <Resource
         name="users"
         list={UserList}
