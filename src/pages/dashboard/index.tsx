@@ -51,9 +51,8 @@ const Dashboard = () => {
       margin={{ top: 20, right: 20, bottom: 5, left: 0 }}
     >
       <Area type="monotone" dataKey="users" stroke="#8884d8" fill="#7884d8" />
-      <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-      <XAxis dataKey="name" />
-      <YAxis />
+      <XAxis dataKey="name" fontSize={14} />
+      <YAxis fontSize={14} />
       <Tooltip />
     </AreaChart>
   );
