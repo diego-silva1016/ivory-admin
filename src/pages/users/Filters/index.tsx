@@ -1,11 +1,28 @@
-import { Filter, TextInput, FilterProps } from 'react-admin';
+import {
+  Filter,
+  TextInput,
+  FilterProps,
+  ReferenceInput,
+  SelectInput,
+} from 'react-admin';
 
-const UserFilter = (props: FilterProps) => (
+type FilterPropsAtualizado = Omit<FilterProps, 'children'>;
+
+const UserFilter = (props: FilterPropsAtualizado) => (
   <Filter {...props}>
     <TextInput label="Name" source="filterName" alwaysOn />
     <TextInput label="Username" source="filterUserName" alwaysOn />
     <TextInput label="Email" source="filterEmail" alwaysOn />
-    <TextInput label="Company" source="filterCompany" alwaysOn />
+    {/* <TextInput label="Company" source="filterCompany" alwaysOn /> */}
+    <ReferenceInput
+      label="Company"
+      source="filterCompany"
+      reference="users"
+      using="company"
+      alwaysOn
+    >
+      <SelectInput optionText="company" />
+    </ReferenceInput>
   </Filter>
 );
 

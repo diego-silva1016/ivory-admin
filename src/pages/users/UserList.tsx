@@ -3,7 +3,7 @@ import UserFilter from './Filters';
 
 export const UserList = (props: ListProps) => (
   <>
-    <List filters={<UserFilter>6565</UserFilter>} {...props}>
+    <List filters={<UserFilter />} {...props}>
       <Datagrid rowClick="edit">
         <TextField source="id" />
         <TextField source="name" />
