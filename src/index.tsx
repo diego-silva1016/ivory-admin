@@ -6,6 +6,7 @@ import { createServer, Model, Registry, Response } from 'miragejs';
 import { ModelDefinition } from 'miragejs/-types';
 // eslint-disable-next-line import/no-unresolved
 import Schema from 'miragejs/orm/schema';
+import { filterProps } from 'recharts/types/util/types';
 import App from './App';
 
 interface UserProps {
@@ -24,6 +25,10 @@ interface ParamsProps {
   _start?: string;
   _end?: string;
   _order?: 'ASC' | 'DESC';
+  filterName?: string;
+  filterUserName?: string;
+  filterEmail?: string;
+  filterCompany?: string;
 }
 
 const Props: ModelDefinition<UserProps> = Model;
@@ -117,7 +122,16 @@ createServer({
     this.namespace = 'api';
 
     this.get('/users', (schema: AppSchema, request) => {
-      const params: ParamsProps = request.queryParams;
+      const {
+        _sort,
+        _order,
+        _start,
+        _end,
+        filterName,
+        filterCompany,
+        filterEmail,
+        filterUserName,
+      }: ParamsProps = request.queryParams;
       const users = schema.all('user');
 
       const headers = {
@@ -125,24 +139,70 @@ createServer({
       };
 
       const modelsFormatados = users.models.sort((a, b) => {
-        if (params._order === 'ASC') {
-          if (a[params._sort || 'id'] < b[params._sort || 'id']) return -1;
-          if (a[params._sort || 'id'] > b[params._sort || 'id']) return 1;
+        if (_order === 'ASC') {
+          if (a[_sort || 'id'] < b[_sort || 'id']) return -1;
+          if (a[_sort || 'id'] > b[_sort || 'id']) return 1;
 
           return 0;
         }
-        if (a[params._sort || 'id'] < b[params._sort || 'id']) return 1;
-        if (a[params._sort || 'id'] > b[params._sort || 'id']) return -1;
+        if (a[_sort || 'id'] < b[_sort || 'id']) return 1;
+        if (a[_sort || 'id'] > b[_sort || 'id']) return -1;
 
         return 0;
       });
 
+      const usersFiltrados = modelsFormatados.filter(user => {
+        let userCorrect = true;
+
+        if (
+          filterName &&
+          !user.name
+            .toLocaleLowerCase()
+            .includes(filterName.toLocaleLowerCase())
+        ) {
+          userCorrect = false;
+        }
+
+        if (
+          filterUserName &&
+          !user.username
+            .toLocaleLowerCase()
+            .includes(filterUserName.toLocaleLowerCase())
+        ) {
+          userCorrect = false;
+        }
+
+        if (
+          filterEmail &&
+          !user.email
+            .toLocaleLowerCase()
+            .includes(filterEmail.toLocaleLowerCase())
+        ) {
+          userCorrect = false;
+        }
+
+        if (
+          filterCompany &&
+          !user.company
+            .toLocaleLowerCase()
+            .includes(filterCompany.toLocaleLowerCase())
+        ) {
+          userCorrect = false;
+        }
+
+        if (userCorrect) return user;
+
+        return null;
+      });
+
+      console.log(usersFiltrados);
+
       return new Response(
         200,
         headers,
-        modelsFormatados.slice(
-          parseInt(params._start || '0', 10),
-          parseInt(params._end || '10', 10),
+        usersFiltrados.slice(
+          parseInt(_start || '0', 10),
+          parseInt(_end || '10', 10),
         ),
       );
     });
