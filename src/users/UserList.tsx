@@ -7,10 +7,9 @@ export const UserList = (props: ListProps) => (
       <TextField source="name" />
       <TextField source="username" />
       <EmailField source="email" />
-      <TextField source="address.street" />
       <TextField source="phone" />
       <TextField source="website" />
-      <TextField source="company.name" />
+      <TextField source="company" />
     </Datagrid>
   </List>
 );
