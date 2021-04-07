@@ -1,16 +1,11 @@
+import { Box, Card } from '@material-ui/core';
 import { useEffect, useState } from 'react';
-import { useDataProvider } from 'react-admin';
+import { useDataProvider, useNotify } from 'react-admin';
 
-import {
-  AreaChart,
-  Area,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from 'recharts';
+import styles from './styles.module.scss';
+import { UserCharts } from './userCharts';
 
-interface UserMonthsProps {
+export interface UserMonthsProps {
   id: string;
   name: string;
   users: number;
@@ -18,12 +13,15 @@ interface UserMonthsProps {
 
 const Dashboard = () => {
   const dataProvider = useDataProvider();
+  const notify = useNotify();
+  const [loading, setLoading] = useState(false);
   const [usersMonth, setUsersMonth] = useState<UserMonthsProps[]>([]);
 
   const data = usersMonth;
 
   useEffect(() => {
     function getUsersMonth() {
+      setLoading(true);
       dataProvider
         .getList<UserMonthsProps>('dashboard', {
           pagination: {
@@ -37,24 +35,41 @@ const Dashboard = () => {
           filter: 2,
         })
         .then(res => setUsersMonth(res.data))
-        .catch(err => console.log('erro'));
+        .catch((error: Error) => {
+          notify(error.message, 'error');
+        })
+        .finally(() => setLoading(false));
     }
 
     getUsersMonth();
-  }, [dataProvider]);
+  }, [dataProvider, notify]);
 
   return (
-    <AreaChart
-      width={500}
-      height={200}
-      data={data}
-      margin={{ top: 20, right: 20, bottom: 5, left: 0 }}
-    >
-      <Area type="monotone" dataKey="users" stroke="#8884d8" fill="#7884d8" />
-      <XAxis dataKey="name" fontSize={14} />
-      <YAxis fontSize={14} />
-      <Tooltip />
-    </AreaChart>
+    <>
+      {!loading && (
+        <>
+          <Card className={styles.dashboardWelcomeContainer}>
+            <Box display="flex">
+              <Box flex="1">
+                <h1>Bem-vindo ao Ivory Admin!</h1>
+                <Box>
+                  <p>
+                    Neste sistema, você pode realizar cadastros, edições e
+                    listagens com paginações e filtros integrados, além de
+                    acompanhar os dados graficamente.
+                  </p>
+                </Box>
+              </Box>
+            </Box>
+          </Card>
+
+          <div className={styles.chartsContainer}>
+            <UserCharts data={data} />
+            <UserCharts data={data} />
+          </div>
+        </>
+      )}
+    </>
   );
 };
 
