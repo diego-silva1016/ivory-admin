@@ -6,7 +6,6 @@ import { createServer, Model, Registry, Response } from 'miragejs';
 import { ModelDefinition } from 'miragejs/-types';
 // eslint-disable-next-line import/no-unresolved
 import Schema from 'miragejs/orm/schema';
-import { filterProps } from 'recharts/types/util/types';
 import App from './App';
 
 interface UserProps {
@@ -194,8 +193,6 @@ createServer({
 
         return null;
       });
-
-      console.log(usersFiltrados);
 
       return new Response(
         200,
